@@ -1,0 +1,38 @@
+{
+  "name": "@beyonk/load-all",
+  "version": "0.0.0",
+  "description": "Loads all files from within a directory",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha **.spec.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/beyonk-adventures/load-all.git"
+  },
+  "keywords": [
+    "load dir",
+    "include dir",
+    "include",
+    "include files",
+    "require all",
+    "dir",
+    "files",
+    "require",
+    "load",
+    "directory",
+    "index"
+  ],
+  "author": "Antony Jones",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/beyonk-adventures/load-all/issues"
+  },
+  "homepage": "https://github.com/beyonk-adventures/load-all#readme",
+  "devDependencies": {
+    "code": "^5.2.4",
+    "memfs": "^2.14.2",
+    "mocha": "^5.2.0",
+    "sinon": "^7.2.3"
+  }
+}
