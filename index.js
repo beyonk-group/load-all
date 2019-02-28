@@ -26,8 +26,8 @@ function loadFiles (dir, fn, kind, initial) {
 
 exports.includeDir = function (dir, kind, modifier = m => m) {
   return loadFiles(dir, (curr, absolutePath) => {
-    const modified = modifier(proxy.load(absolutePath))
-    return [ ...curr, modified ]
+    const modified = proxy.load(absolutePath).map(i => modifier(i))
+    return [ ...curr, ...modified ]
   }, kind, [])
 }
 

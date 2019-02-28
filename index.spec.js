@@ -18,7 +18,7 @@ function createFilesystem (layout, usesRequire = false) {
   if (usesRequire) {
     stub(proxy, 'load').callsFake(arg => ({ [basename(arg)]: 'loaded!' }))
   } else {
-    stub(proxy, 'load').callsFake(arg => `loaded ${arg}!`)
+    stub(proxy, 'load').callsFake(arg => [ `loaded ${arg}!` ])
   }
   return root
 }

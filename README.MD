@@ -47,7 +47,7 @@ const exported = exportDir('/my-dir')
 
 ### includeDir
 
-`includeDir` which results in a concatenated array of the contents of files, so that a directory structured thusly:
+`includeDir` results in a concatenated array of the contents of files (which should export an array themselves), so that a directory structured thusly:
 
 ```
 /routes
