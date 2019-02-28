@@ -43,7 +43,7 @@ const exported = exportDir('/my-dir')
 // library2: (exported as `library2` from library2and3.js),
 // library3: (exported as `library3` from library2and3.js)
 // }
-``
+```
 
 ### includeDir
 
