@@ -31,6 +31,7 @@
   "homepage": "https://github.com/beyonk-adventures/load-all#readme",
   "devDependencies": {
     "code": "^5.2.4",
+    "fs-monkey": "^1.0.1",
     "memfs": "^2.14.2",
     "mocha": "^5.2.0",
     "sinon": "^7.2.3"
