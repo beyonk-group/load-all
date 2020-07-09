@@ -33,7 +33,7 @@ exports.includeDir = function (dir, kind, modifier = m => m) {
 
 exports.exportDir = function (dir, kind, modifier = m => m) {
   return loadFiles(dir, (curr, absolutePath) => {
-    const exported = proxy.load(absolutePath)
-    return { ...curr, ...modifier(exported) }
+    const exported = require(absolutePath)
+    return { ...curr, ...modifier(exported, curr) }
   }, kind, {})
 }

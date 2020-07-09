@@ -1,12 +1,14 @@
 'use strict'
 
 const fs = require('fs')
-const { join, basename } = require('path')
+const { join } = require('path')
 const { fs: memfs, vol } = require('memfs')
 const sinon = require('sinon')
 const { stub } = sinon
 const { expect } = require('code')
 const proxy = require('./require-proxy')
+const { patchRequire } = require('fs-monkey')
+
 const loadAll = require('.')
 
 function createFilesystem (layout, usesRequire = false) {
@@ -16,7 +18,7 @@ function createFilesystem (layout, usesRequire = false) {
   stub(fs, 'readdirSync').callsFake(memfs.readdirSync)
   stub(fs, 'statSync').callsFake(memfs.statSync)
   if (usesRequire) {
-    stub(proxy, 'load').callsFake(arg => ({ [basename(arg)]: 'loaded!' }))
+    patchRequire(vol)
   } else {
     stub(proxy, 'load').callsFake(arg => [ `loaded ${arg}!` ])
   }
@@ -26,7 +28,7 @@ function createFilesystem (layout, usesRequire = false) {
 function destroyFilesystem () {
   fs.readdirSync.restore()
   fs.statSync.restore()
-  proxy.load.restore()
+  proxy.load.restore && proxy.load.restore()
 }
 
 describe('load-all', () => {
@@ -111,9 +113,9 @@ describe('load-all', () => {
       let root
       beforeEach(() => {
         root = createFilesystem({
-          './dir1/index.js': '',
-          './dir2/index.js': '',
-          './dir3/index.js': '',
+          './dir1/index.js': 'module.exports={ dir1: "loaded!" }',
+          './dir2/index.js': 'module.exports={ dir2: "loaded!" }',
+          './dir3/index.js': 'module.exports={ dir3: "loaded!" }',
         }, true)
       })
 
@@ -133,20 +135,17 @@ describe('load-all', () => {
     })
 
     context('with modifier', () => {
-      let root
-      beforeEach(() => {
-        root = createFilesystem({
-          './dir1/index.js': '',
-          './dir2/index.js': '',
-          './dir3/index.js': '',
-        }, true)
-      })
-
       afterEach(() => {
         destroyFilesystem()
       })
 
       it('sees dirs', () => {
+        const root = createFilesystem({
+          './dir1/index.js': 'module.exports={ dir1: "loaded!" }',
+          './dir2/index.js': 'module.exports={ dir2: "loaded!" }',
+          './dir3/index.js': 'module.exports={ dir3: "loaded!" }',
+        }, true)
+
         expect(
           loadAll.exportDir(root, undefined, m => {
             const filename = Object.keys(m)
@@ -158,15 +157,34 @@ describe('load-all', () => {
           dir3: { filename: 'loaded!' }
         })
       })
+
+      it('is passed previous', () => {
+        const root = createFilesystem({
+          './dir1/index.js': 'module.exports={ dir1: "loaded!", sameKey: 1 }',
+          './dir2/index.js': 'module.exports={ dir2: "loaded!", sameKey: 1 }',
+          './dir3/index.js': 'module.exports={ dir3: "loaded!", sameKey: 1 }',
+        }, true)
+
+        expect(
+          loadAll.exportDir(root, undefined, (m, prev) => {
+            return { ...m, sameKey: m.sameKey + (prev.sameKey || 0) }
+          })
+        ).to.equal({
+          dir1: 'loaded!',
+          dir2: 'loaded!',
+          dir3: 'loaded!',
+          sameKey: 3
+        })
+      })
     })
 
     context('two directories and a file', () => {
       let root
       beforeEach(() => {
         root = createFilesystem({
-          './dir1/index.js': '',
-          './file2.js': '',
-          './dir3/index.js': '',
+          './dir1/index.js': 'module.exports={ dir1: "loaded!" }',
+          './file2.js': 'module.exports={ dir2: "loaded!" }',
+          './dir3/index.js': 'module.exports={ dir3: "loaded!" }',
         }, true)
       })
 
