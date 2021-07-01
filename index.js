@@ -7,13 +7,7 @@ const fs = require('fs')
 function resovleAbsolutePath (dir, file, kind) {
   const absolutePath = join(dir, file)
   const isSubDirectory = fs.statSync(absolutePath).isDirectory()
-  if (isSubDirectory) {
-    if (kind) {
-      console.log(`Adding ${kind} from ${file}`)
-    }
-    return absolutePath
-  }
-  return undefined
+  return isSubDirectory ? absolutePath : undefined
 }
 
 function loadFiles (dir, fn, kind, initial) {

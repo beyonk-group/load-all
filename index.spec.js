@@ -5,7 +5,7 @@ const { join } = require('path')
 const { fs: memfs, vol } = require('memfs')
 const sinon = require('sinon')
 const { stub } = sinon
-const { expect } = require('code')
+const { expect } = require('@hapi/code')
 const proxy = require('./require-proxy')
 const { patchRequire } = require('fs-monkey')
 
