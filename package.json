@@ -1,6 +1,6 @@
 {
   "name": "@beyonk/load-all",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Loads all files from within a directory",
   "main": "index.js",
   "scripts": {
